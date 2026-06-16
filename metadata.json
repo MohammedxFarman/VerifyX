@@ -1,0 +1,6 @@
+{
+  "name": "VerifyX",
+  "description": "AI-powered Digital Trust and Public Safety Platform. Verify websites, images, social profiles, and news content.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

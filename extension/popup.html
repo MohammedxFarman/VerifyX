@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>VerifyX - Digital Safety</title>
+  <style>
+    body {
+      width: 320px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8fafc;
+      color: #1e293b;
+    }
+    .header {
+      background-color: #ffffff;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge {
+      background-color: #dbeafe;
+      color: #1e40af;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+    .container {
+      padding: 16px;
+    }
+    .card {
+      background-color: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      margin-top: 0;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .info-box {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #0f172a;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.2s;
+    }
+    .btn:hover {
+      background-color: #1d4ed8;
+    }
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      background-color: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbcbcb;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 8px;
+      text-decoration: none;
+    }
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #94a3b8;
+      padding: 12px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #059669;
+      margin-top: 6px;
+    }
+    .score-label {
+      font-size: 11px;
+      font-weight: 400;
+      color: #64748b;
+    }
+    .highlight {
+      font-style: italic;
+      color: #475569;
+      background-color: #fdf2e9;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .risk-high {
+      color: #dc2626;
+    }
+    .risk-medium {
+      color: #d97706;
+    }
+    .sk-loading {
+      display: none;
+      color: #2563eb;
+      font-size: 12px;
+      margin-top: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      VerifyX
+    </div>
+    <span class="badge">v1.0.0</span>
+  </div>
+
+  <div class="container">
+    <div class="card" id="active-context">
+      <h3 class="title">Active Scanning Target</h3>
+      <div class="info-box" id="context-desc">
+        No selection cached. Scan active page with one click.
+      </div>
+    </div>
+
+    <button id="scan-now-btn" class="btn">Scan Active Page safety</button>
+    
+    <div id="loading" class="sk-loading">
+      Running deep integrity scan... Please wait.
+    </div>
+
+    <div class="card" id="result-box" style="display: none; margin-top: 12px;">
+      <h3 class="title">Trust Report</h3>
+      <div class="info-box">
+        <div class="score-label">VerifyX AI Trust Score</div>
+        <div class="score-badge" id="trust-score">85/100</div>
+        <p id="trust-explanation" style="margin: 8px 0 0 0; color: #334155; font-size: 12px;"></p>
+      </div>
+    </div>
+
+    <a href="https://ais-dev-ox7rdiyg2rchwe2xbhecra-86737446972.asia-southeast1.run.app" target="_blank" class="btn-secondary">Open VerifyX Dashboard</a>
+  </div>
+
+  <div class="footer">
+    Verify Everything. Trust Confidently.
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
