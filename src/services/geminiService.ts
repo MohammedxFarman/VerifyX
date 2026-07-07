@@ -260,7 +260,7 @@ CRITICAL: Highly compressed images without EXIF or camera markers (such as Whats
         return JSON.parse((response.text || "").trim()) as VerifyImageResponse;
       });
     } catch (err) {
-      console.error("Gemini Image verify error, using smart fallback:", err);
+      console.error("⚠️ Gemini Image verify FAILED, falling back to MOCK. Reason:", err?.message || err);
       return getMockImageVerification(fileName, fileSize);
     }
   },
