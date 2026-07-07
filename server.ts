@@ -7,7 +7,7 @@ import { FileDb } from "./src/db/fileDb";
 import { GeminiService } from "./src/services/geminiService";
 import { DashboardStats } from "./src/types";
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || "verifyx-jwt-secure-secret-key-9a8b7c";
 
 async function startServer() {
