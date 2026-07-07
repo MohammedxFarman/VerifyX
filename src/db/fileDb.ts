@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { User, VerificationHistory } from '../types';
 
-const DB_FILE = path.join(process.cwd(), 'src', 'db', 'data.json');
+const DB_FILE = process.env.DB_FILE || path.join(process.cwd(), 'src', 'db', 'data.json');
 
 interface DbSchema {
   users: User[];
