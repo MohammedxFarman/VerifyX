@@ -20,7 +20,7 @@ function getAiClient(): GoogleGenAI | null {
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
-    console.warn("GEMINI_API_KEY not provided or set to placeholder — using local mock heuristics.");
+    console.warn("🚫 NO GEMINI KEY DETECTED — every verification (image, news, url, etc.) is using FAKE mock data, not real AI analysis.");
     return null;
   }
 
