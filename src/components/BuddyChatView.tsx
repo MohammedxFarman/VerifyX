@@ -1,5 +1,17 @@
+import { api } from "../lib/api";
 import { useState, useEffect, useRef } from "react";
-import { MessageSquare, Send, Mic, MicOff, Volume2, Loader2, User, Shield, AlertTriangle, Key } from "lucide-react";
+import {
+  MessageSquare,
+  Send,
+  Mic,
+  MicOff,
+  Volume2,
+  Loader2,
+  User,
+  Shield,
+  AlertTriangle,
+  Key,
+} from "lucide-react";
 
 interface ChatMessage {
   role: "user" | "model";
@@ -11,8 +23,8 @@ export default function BuddyChatView() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "model",
-      text: "Hello! I am VerifyX AI Buddy, your digital safety advisor. Pose any questions concerning cyber scams (phishing), reporting routes (like the 1930 helpline), WhatsApp hoaxes, or password security!"
-    }
+      text: "Hello! I am VerifyX AI Buddy, your digital safety advisor. Pose any questions concerning cyber scams (phishing), reporting routes (like the 1930 helpline), WhatsApp hoaxes, or password security!",
+    },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,7 +42,9 @@ export default function BuddyChatView() {
 
   useEffect(() => {
     // Initialize Web Speech Recognition
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       recognition.continuous = false;
@@ -71,23 +85,30 @@ export default function BuddyChatView() {
 
     try {
       // Create body matching Express history endpoint parameters
-      const historyPayload = messages.map(m => ({
+      const historyPayload = messages.map((m) => ({
         role: m.role,
-        parts: [{ text: m.text }]
+        parts: [{ text: m.text }],
       }));
 
-      const res = await fetch("/api/chat", {
+      const data = await api<{ reply: string }>("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: customMessage, history: historyPayload })
+        body: JSON.stringify({
+          message: customMessage,
+          history: historyPayload,
+        }),
       });
-      const data = await res.json();
-      
-      const modelMsg: ChatMessage = { role: "model", text: data.reply || "Unable to retrieve support statement." };
+
+      const modelMsg: ChatMessage = {
+        role: "model",
+        text: data.reply || "Unable to retrieve support statement.",
+      };
       setMessages((prev) => [...prev, modelMsg]);
     } catch (err) {
       console.error(err);
-      const errMsg: ChatMessage = { role: "model", text: "Offline Alert: Connected local fallback is loaded. Dial 1930 for regional emergency, or paste links above." };
+      const errMsg: ChatMessage = {
+        role: "model",
+        text: "The assistant is unavailable. No substitute answer was generated. Please try again later.",
+      };
       setMessages((prev) => [...prev, errMsg]);
     } finally {
       setLoading(false);
@@ -104,10 +125,12 @@ export default function BuddyChatView() {
   };
 
   const triggerTextToSpeech = (textToRead: string) => {
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       // Cancel active voice playbacks
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(textToRead.replace(/[#*`]/g, ""));
+      const utterance = new SpeechSynthesisUtterance(
+        textToRead.replace(/[#*`]/g, ""),
+      );
       utterance.lang = "en-IN"; // English with Indian Accent
       utterance.rate = 1.0;
       window.speechSynthesis.speak(utterance);
@@ -123,10 +146,12 @@ export default function BuddyChatView() {
             <MessageSquare className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-slate-900 tracking-tight leading-none">VerifyX AI Support Buddy</h3>
+            <h3 className="text-sm font-bold text-slate-900 tracking-tight leading-none">
+              VerifyX AI Support Buddy
+            </h3>
             <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-1 mt-0.5 uppercase tracking-wider">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              Always online / Certified Safety Agent
+              AI guidance · verify important information
             </span>
           </div>
         </div>
@@ -148,22 +173,30 @@ export default function BuddyChatView() {
             }`}
           >
             {/* Avatar */}
-            <div className={`h-8 w-8 rounded-xl flex items-center justify-center text-xs flex-shrink-0 ${
-              msg.role === "user" 
-                ? "bg-slate-150 text-slate-700" 
-                : "trust-gradient text-white shadow-sm"
-            }`}>
-              {msg.role === "user" ? <User className="h-4 w-4" /> : <Shield className="h-4 w-4" />}
+            <div
+              className={`h-8 w-8 rounded-xl flex items-center justify-center text-xs flex-shrink-0 ${
+                msg.role === "user"
+                  ? "bg-slate-150 text-slate-700"
+                  : "trust-gradient text-white shadow-sm"
+              }`}
+            >
+              {msg.role === "user" ? (
+                <User className="h-4 w-4" />
+              ) : (
+                <Shield className="h-4 w-4" />
+              )}
             </div>
 
             {/* Bubble */}
-            <div className={`rounded-2xl p-3.5 text-xs md:text-sm leading-relaxed shadow-xs relative group ${
-              msg.role === "user"
-                ? "trust-gradient text-white rounded-tr-none"
-                : "bg-white border border-slate-100 text-slate-800 rounded-tl-none whitespace-pre-wrap"
-            }`}>
+            <div
+              className={`rounded-2xl p-3.5 text-xs md:text-sm leading-relaxed shadow-xs relative group ${
+                msg.role === "user"
+                  ? "trust-gradient text-white rounded-tr-none"
+                  : "bg-white border border-slate-100 text-slate-800 rounded-tl-none whitespace-pre-wrap"
+              }`}
+            >
               <p>{msg.text}</p>
-              
+
               {msg.role === "model" && (
                 <button
                   onClick={() => triggerTextToSpeech(msg.text)}
@@ -197,13 +230,19 @@ export default function BuddyChatView() {
             id="voice-mic-trigger-btn"
             onClick={startVoiceRecording}
             className={`p-2.5 rounded-xl border transition-all ${
-              isRecording 
-                ? "bg-red-50 border-red-200 text-red-600 animate-pulse" 
+              isRecording
+                ? "bg-red-50 border-red-200 text-red-600 animate-pulse"
                 : "bg-slate-50 border-slate-150 hover:bg-slate-100 text-slate-500"
             }`}
-            title={isRecording ? "Listening... Click to stop" : "Speak to input"}
+            title={
+              isRecording ? "Listening... Click to stop" : "Speak to input"
+            }
           >
-            {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+            {isRecording ? (
+              <MicOff className="h-4 w-4" />
+            ) : (
+              <Mic className="h-4 w-4" />
+            )}
           </button>
         )}
 
@@ -211,7 +250,11 @@ export default function BuddyChatView() {
           id="chat-input-textbox"
           type="text"
           className="flex-1 bg-slate-50 border border-slate-150 rounded-xl px-3.5 py-2.5 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder={isRecording ? "Listening to voice input..." : "Type your safety concerns..."}
+          placeholder={
+            isRecording
+              ? "Listening to voice input..."
+              : "Type your safety concerns..."
+          }
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}

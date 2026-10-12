@@ -1,42 +1,61 @@
 {
-  "name": "react-example",
+  "name": "verifyx",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
-    "start": "node dist/server.cjs",
-    "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=build/server.cjs",
+    "start": "node --env-file-if-exists=.env --require ./scripts/production.cjs build/server.cjs",
+    "clean": "node scripts/clean.cjs",
+    "lint": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "test:browser": "playwright test",
+    "migrate:legacy": "tsx scripts/migrate-legacy.ts",
+    "test:production": "node scripts/production-smoke.mjs",
+    "format": "prettier --write server.ts src scripts tests playwright.config.ts"
   },
   "dependencies": {
-    "@google/genai": "^2.4.0",
     "@tailwindcss/vite": "^4.1.14",
     "@vitejs/plugin-react": "^5.0.4",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
+    "exifr": "^7.1.3",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.7.1",
     "i18next": "^26.3.1",
+    "ipaddr.js": "^2.5.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.546.0",
-    "motion": "^12.23.24",
+    "pg": "^8.23.1",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "react-i18next": "^17.0.8",
-    "recharts": "^3.8.1",
-    "vite": "^6.2.3"
+    "sharp": "^0.35.5",
+    "vite": "^6.2.3",
+    "zod": "^4.6.6"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.14.0",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",
+    "prettier": "^3.9.10",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.3"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "optionalDependencies": {
+    "@contentauth/c2pa-node": "^0.9.9"
   }
 }

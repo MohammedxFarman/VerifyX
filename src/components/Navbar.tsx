@@ -27,8 +27,12 @@ export default function Navbar({ user, onLogout, onOpenAuth }: NavbarProps) {
                 <Shield className="h-5 w-5" />
               </div>
               <div>
-                <span className="font-extrabold text-xl text-slate-900 tracking-tight">Verify<span className="text-blue-600">X</span></span>
-                <p className="text-[9px] text-slate-400 font-mono tracking-wider uppercase -mt-0.5 font-bold">{t("nav.digital_trust_core")}</p>
+                <span className="font-extrabold text-xl text-slate-900 tracking-tight">
+                  Verify<span className="text-blue-600">X</span>
+                </span>
+                <p className="text-[9px] text-slate-400 font-mono tracking-wider uppercase -mt-0.5 font-bold">
+                  {t("nav.digital_trust_core")}
+                </p>
               </div>
             </div>
           </div>
@@ -36,8 +40,8 @@ export default function Navbar({ user, onLogout, onOpenAuth }: NavbarProps) {
           {/* Quick Stats or Profile details */}
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-1.5 text-[10px] font-bold font-mono text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/60 shadow-xs">
-              <span className="inline-block h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-              {t("nav.cyber_safety_portal_live")}
+              <span className="inline-block h-1.5 w-1.5 bg-emerald-500 rounded-full "></span>
+              Evidence & limitations
             </div>
 
             {/* Language Switcher */}
@@ -77,16 +81,22 @@ export default function Navbar({ user, onLogout, onOpenAuth }: NavbarProps) {
                   className="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-full px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none"
                 >
                   <User className="h-3.5 w-3.5 text-slate-500" />
-                  <span className="max-w-[100px] truncate">{user.fullName}</span>
+                  <span className="max-w-[100px] truncate">
+                    {user.fullName}
+                  </span>
                 </button>
 
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-200 shadow-xl py-1.5 z-50 text-xs">
                     <div className="px-4 py-2.5 border-b border-slate-100">
-                      <p className="font-bold text-slate-900 truncate">{user.fullName}</p>
-                      <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
+                      <p className="font-bold text-slate-900 truncate">
+                        {user.fullName}
+                      </p>
+                      <p className="text-[11px] text-slate-400 truncate">
+                        {user.email}
+                      </p>
                     </div>
-                    
+
                     <button
                       id="nav-logout-btn"
                       onClick={() => {

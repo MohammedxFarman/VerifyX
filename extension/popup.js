@@ -1,71 +1,19 @@
-// VerifyX Extension popup script
-
-document.addEventListener("DOMContentLoaded", () => {
-  const contextDesc = document.getElementById("context-desc");
-  const scanBtn = document.getElementById("scan-now-btn");
-  const loading = document.getElementById("loading");
-  const resultBox = document.getElementById("result-box");
-  const trustScore = document.getElementById("trust-score");
-  const trustExplanation = document.getElementById("trust-explanation");
-
-  let activeUrl = "";
-  let selectedText = "";
-
-  // 1. Load cached data from right-clicks
-  chrome.storage?.local.get(["lastSelectedText", "lastSelectedUrl"], (data) => {
-    if (data.lastSelectedText) {
-      selectedText = data.lastSelectedText;
-      contextDesc.innerHTML = `Selected quote cached for verification: <div class="highlight">"${selectedText.substring(0, 80)}${selectedText.length > 80 ? "..." : ""}"</div>`;
-      scanBtn.textContent = "Verify Selected Text";
-      // Clear storage so it doesn't linger forever
-      chrome.storage.local.remove("lastSelectedText");
-    } else if (data.lastSelectedUrl) {
-      activeUrl = data.lastSelectedUrl;
-      contextDesc.innerHTML = `Link cached from right click: <div class="highlight">${activeUrl}</div>`;
-      scanBtn.textContent = "Scan Domain Trust";
-      chrome.storage.local.remove("lastSelectedUrl");
-    } else {
-      // Get current active tab
-      chrome.tabs?.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs && tabs[0]) {
-          activeUrl = tabs[0].url;
-          contextDesc.innerHTML = `Active Tab: <span style="font-weight: 500;">${tabs[0].title || "Untitled Webpage"}</span><br/><span style="color: grey; font-size: 11px;">${activeUrl.substring(0, 50)}...</span>`;
-        }
-      });
-    }
-  });
-
-  // 2. Trigger verification
-  scanBtn.addEventListener("click", () => {
-    loading.style.display = "block";
-    resultBox.style.display = "none";
-    scanBtn.disabled = true;
-
-    // Call local server fallback or client-side heuristic prediction
-    setTimeout(() => {
-      loading.style.display = "none";
-      resultBox.style.display = "block";
-      scanBtn.disabled = false;
-
-      if (selectedText) {
-        // High quality mock results
-        trustScore.innerHTML = "18<span class='score-label'>/100</span>";
-        trustScore.style.color = "#dc2626"; // red
-        trustExplanation.textContent = "Warning: High risk of falsified context. Text contains medical hoaxes or phishing lottery wording.";
-        selectedText = ""; // clear after scan
-        scanBtn.textContent = "Scan Active Page safety";
-      } else {
-        const isSuspicious = activeUrl.includes("secure") || activeUrl.includes("login") || activeUrl.includes("update") || activeUrl.includes(".xyz");
-        if (isSuspicious) {
-          trustScore.innerHTML = "12<span class='score-label'>/100</span>";
-          trustScore.style.color = "#dc2626";
-          trustExplanation.textContent = "Dangerous: Phishing attempt or scam site risk detected. Highly anomalous domain age and invalid SSL indicators.";
-        } else {
-          trustScore.innerHTML = "91<span class='score-label'>/100</span>";
-          trustScore.style.color = "#059669";
-          trustExplanation.textContent = "Verified Safe: Valid secure SSL signature, highly authentic domain, with zero recorded community reporting flags.";
-        }
-      }
-    }, 1500);
+document.addEventListener('DOMContentLoaded',async()=>{
+  const $=id=>document.getElementById(id);const button=$('scan-now-btn');let activeUrl='',selectedText='';
+  const saved=await chrome.storage.local.get(['lastSelectedText','lastSelectedUrl','backendOrigin']);
+  let origin=saved.backendOrigin||'https://verifyx-fue5.onrender.com';$('backend-origin').value=origin;$('dashboard-link').href=origin;
+  if(saved.lastSelectedText){selectedText=saved.lastSelectedText;$('context-desc').textContent='Selected claim: '+selectedText.slice(0,300);button.textContent='Review claim';await chrome.storage.local.remove('lastSelectedText');}
+  else{activeUrl=saved.lastSelectedUrl||'';if(!activeUrl){const tabs=await chrome.tabs.query({active:true,currentWindow:true});activeUrl=tabs[0]?.url||'';}$('context-desc').textContent='Website: '+activeUrl;await chrome.storage.local.remove('lastSelectedUrl');}
+  $('save-backend').addEventListener('click',async()=>{try{const url=new URL($('backend-origin').value);if(url.username||url.password||url.pathname!=='/'||url.search||url.hash||!(url.protocol==='https:'||url.protocol==='http:'&&['localhost','127.0.0.1'].includes(url.hostname)))throw new Error('Use an HTTPS origin or a localhost development origin.');const pattern=url.origin+'/*';if(!await chrome.permissions.request({origins:[pattern]}))throw new Error('Backend access permission was not granted.');origin=url.origin;await chrome.storage.local.set({backendOrigin:origin});await chrome.storage.session.remove('verifyxSession');$('dashboard-link').href=origin;$('config-status').textContent='Backend saved.';}catch(e){$('config-status').textContent=e.message;}});
+  async function request(route,body){
+    let stored=(await chrome.storage.session.get('verifyxSession')).verifyxSession;
+    if(!stored||stored.origin!==origin||stored.expires<Date.now()){const response=await fetch(origin+'/api/session',{credentials:'omit',signal:AbortSignal.timeout(20000)});const data=await response.json();if(!response.ok||typeof data.sessionToken!=='string')throw new Error('Backend is unavailable or needs the VerifyX evidence update.');stored={origin,token:data.sessionToken,expires:Date.now()+23*3600000};await chrome.storage.session.set({verifyxSession:stored});}
+    const response=await fetch(origin+route,{method:'POST',credentials:'omit',headers:{'Content-Type':'application/json',Authorization:'Bearer '+stored.token},body:JSON.stringify(body),signal:AbortSignal.timeout(35000)});const data=await response.json();if(response.status===401)await chrome.storage.session.remove('verifyxSession');if(!response.ok)throw new Error(data.error||'Backend request failed.');if(data.version!==1||typeof data.summary!=='string'||!data.analysis)throw new Error('Backend returned an unsupported report.');return data;
+  }
+  button.addEventListener('click',async()=>{
+    button.disabled=true;$('loading').style.display='block';$('result-box').style.display='none';
+    try{const data=await request(selectedText?'/api/verify/news':'/api/verify/url',selectedText?{content:selectedText}:{url:activeUrl});$('trust-score').textContent=data.status.replaceAll('_',' ');$('trust-explanation').textContent=data.summary+'\n\n'+Object.entries(data.analysis).map(([name,check])=>name.replaceAll('_',' ')+': '+check.status+'\n'+check.findings.join('\n')).join('\n\n');}
+    catch(e){$('trust-score').textContent='Unavailable';$('trust-explanation').textContent=e.message;}
+    finally{button.disabled=false;$('loading').style.display='none';$('result-box').style.display='block';}
   });
 });

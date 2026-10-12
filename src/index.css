@@ -1,28 +1,87 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import "tailwindcss";
-
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, monospace;
 }
-
+:root {
+  color-scheme: light;
+}
 body {
+  margin: 0;
   font-family: var(--font-sans);
-  background-color: #F8FAFC;
-  color: #0F172A;
+  background: #f8fafc;
+  color: #0f172a;
 }
-
-.glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(241, 245, 249, 0.6);
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
 }
-
+button:not(:disabled),
+summary {
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 3px;
+}
+.panel {
+  @apply rounded-2xl border border-slate-200 bg-white p-6 shadow-sm;
+}
+.eyebrow {
+  @apply text-[11px] font-semibold tracking-[0.15em] uppercase text-blue-700;
+}
+.page-title {
+  @apply text-2xl sm:text-3xl font-semibold tracking-tight mt-2;
+}
+.description {
+  @apply text-sm sm:text-base text-slate-600 leading-relaxed mt-3;
+}
+.field-label {
+  @apply block text-sm font-medium text-slate-700 mb-2;
+}
+.field {
+  @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400;
+}
+.button-primary {
+  @apply inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition-colors;
+}
+.button-secondary {
+  @apply flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50;
+}
+.status {
+  @apply inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600 capitalize;
+}
+.status-error {
+  @apply bg-red-50 text-red-700;
+}
 .trust-gradient {
-  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  background: #2563eb;
 }
-
-.score-ring {
-  border: 8px solid #F1F5F9;
-  border-top: 8px solid #3B82F6;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media print {
+  nav,
+  aside,
+  footer,
+  button {
+    display: none !important;
+  }
+  .panel {
+    box-shadow: none;
+    break-inside: avoid;
+  }
 }

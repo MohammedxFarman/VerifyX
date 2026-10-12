@@ -140,7 +140,7 @@
     <div class="logo">
       VerifyX
     </div>
-    <span class="badge">v1.0.0</span>
+    <span class="badge">v1.1.0</span>
   </div>
 
   <div class="container">
@@ -154,22 +154,22 @@
     <button id="scan-now-btn" class="btn">Scan Active Page safety</button>
     
     <div id="loading" class="sk-loading">
-      Running deep integrity scan... Please wait.
+      Retrieving evidence… No verdict yet.
     </div>
 
     <div class="card" id="result-box" style="display: none; margin-top: 12px;">
-      <h3 class="title">Trust Report</h3>
+      <h3 class="title">Evidence report</h3>
       <div class="info-box">
-        <div class="score-label">VerifyX AI Trust Score</div>
-        <div class="score-badge" id="trust-score">85/100</div>
-        <p id="trust-explanation" style="margin: 8px 0 0 0; color: #334155; font-size: 12px;"></p>
+        <div class="score-label">Analysis status</div>
+        <div class="score-badge" id="trust-score">Not analyzed</div>
+        <p id="trust-explanation" style="white-space:pre-wrap;margin: 8px 0 0 0; color: #334155; font-size: 12px;"></p>
       </div>
     </div>
 
-    <a href="https://ais-dev-ox7rdiyg2rchwe2xbhecra-86737446972.asia-southeast1.run.app" target="_blank" class="btn-secondary">Open VerifyX Dashboard</a>
+    <a id="dashboard-link" rel="noopener noreferrer" href="https://verifyx-fue5.onrender.com/" target="_blank" class="btn-secondary">Open VerifyX Dashboard</a>
   </div>
 
-  <div class="footer">
+  <div class="container"><label for="backend-origin">Backend origin</label><input id="backend-origin" type="url" style="box-sizing:border-box;width:100%;margin:8px 0;padding:8px"/><button class="btn-secondary" id="save-backend">Save backend</button><p id="config-status" role="status"></p></div><div class="footer">
     Verify Everything. Trust Confidently.
   </div>
 

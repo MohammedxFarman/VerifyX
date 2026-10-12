@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "VerifyX - Trust Scanner",
-  "version": "1.0.0",
-  "description": "Verify Everything. Trust Confidently. AI-powered trust analyzer for websites, content, and media.",
+  "version": "1.1.0",
+  "description": "Inspect website and claim evidence with your VerifyX backend. Results include explicit limitations.",
   "permissions": [
     "activeTab",
     "contextMenus",
@@ -24,5 +24,13 @@
     "16": "icon16.png",
     "48": "icon48.png",
     "128": "icon128.png"
-  }
+  },
+  "host_permissions": [
+    "https://verifyx-fue5.onrender.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ]
 }
